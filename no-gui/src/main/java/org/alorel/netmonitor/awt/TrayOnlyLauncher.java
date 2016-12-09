@@ -12,9 +12,15 @@ import org.alorel.netmonitor.common.sqlite.SQLiteFactory;
 import org.alorel.netmonitor.common.sqlite.config.Config;
 import org.alorel.netmonitor.common.sqlite.config.Keys;
 import org.alorel.netmonitor.common.sqlite.connectionlog.ConnectionLogEntry;
+import org.alorel.netmonitor.common.updatecheck.UpdateChecker;
+import org.alorel.netmonitor.common.updatecheck.UpdateStatus;
 
+import java.awt.Desktop;
+import java.awt.MenuItem;
 import java.awt.PopupMenu;
 import java.awt.SystemTray;
+import java.awt.TrayIcon;
+import java.net.URI;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -82,6 +88,29 @@ public class TrayOnlyLauncher {
     }
 
     /**
+     * Check for updates and adds a download menu entry if a new version exists
+     */
+    private static void checkForUpdates() {
+        new Thread(() -> {
+            final UpdateStatus st = UpdateChecker.hasUpdate();
+
+            if (st == UpdateStatus.NEW_VERSION_AVAILABLE) {
+                final MenuItem m = new MenuItem("Download newest version");
+                m.addActionListener(e -> {
+                    try {
+                        Desktop.getDesktop().browse(new URI("https://github.com/Alorel/netmonitor/releases"));
+                    } catch (final Exception x) {
+                        Tray.toast(x.getLocalizedMessage(), TrayIcon.MessageType.ERROR);
+                    }
+                });
+
+                popupMenu.addSeparator();
+                popupMenu.add(m);
+            }
+        }, "Update Check").start();
+    }
+
+    /**
      * Init the app
      *
      * @param args CLI args
@@ -103,6 +132,7 @@ public class TrayOnlyLauncher {
             initLoggingSetting();
 
             Monitor.init();
+            checkForUpdates();
         } catch (final Exception e) {
             e.printStackTrace();
         }
