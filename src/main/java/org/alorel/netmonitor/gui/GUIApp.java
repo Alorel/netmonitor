@@ -33,13 +33,21 @@ import java.sql.Statement;
 import java.util.Optional;
 
 /**
- * Created by Art on 09/12/2016.
+ * The main JavaFX application
+ *
+ * @author a.molcanovas@gmail.com
  */
 @ParametersAreNonnullByDefault
 public class GUIApp extends Application {
 
+    /**
+     * The main scene
+     */
     private Scene homeScene;
 
+    /**
+     * Whether to show the stage when loading completes, i.e. the "start minimised" option
+     */
     private boolean showStage;
 
     @Override
@@ -89,20 +97,25 @@ public class GUIApp extends Application {
     @Override
     public void init() {
         try {
+            // Compact the database
             try (final Connection conn = SQLiteFactory.getConnection()) {
                 try (final Statement st = conn.createStatement()) {
                     st.execute("VACUUM");
                 }
             }
 
+            //Check whether we're starting in minimised mode
             showStage = !Config.getBoolean(Keys.START_MINIMISED);
 
+            //Initialise classes
             Class.forName(ConnectionLogEntry.class.getName());
             Class.forName(Monitor.class.getName());
 
+            //Load main UI
             final FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/alorel/netmonitor/home.fxml"));
             homeScene = new Scene(loader.load());
 
+            //Prepare tray icon
             Tray.preStageInit();
         } catch (final Exception e) {
             FXDialog.exception(e, evt -> System.exit(1));

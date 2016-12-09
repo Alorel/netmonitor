@@ -34,6 +34,9 @@ import java.lang.reflect.Field;
 @ParametersAreNonnullByDefault
 public class GUIPreloader extends Preloader {
 
+    /**
+     * The preloader stage
+     */
     private Stage preloaderStage;
 
     @Override
@@ -48,11 +51,15 @@ public class GUIPreloader extends Preloader {
                 e.printStackTrace();
             }
 
+            //Set up preloader stage
             preloaderStage = st;
-            Platform.setImplicitExit(false);
             FXUtil.setStageIcons(st);
             st.setResizable(false);
 
+            //Allow minimised execution
+            Platform.setImplicitExit(false);
+
+            //Init preloader GUI
             final VBox vbox = new VBox(2);
             vbox.setMaxWidth(Region.USE_PREF_SIZE);
             vbox.setMaxHeight(Region.USE_PREF_SIZE);
@@ -66,7 +73,7 @@ public class GUIPreloader extends Preloader {
 
             st.setTitle("Net Monitor");
             st.setWidth(250);
-            st.setHeight(125);
+            st.setHeight(75);
             st.setScene(scene);
             st.show();
         } else {
@@ -75,6 +82,11 @@ public class GUIPreloader extends Preloader {
         }
     }
 
+    /**
+     * Initialise the app
+     *
+     * @param args CLI args
+     */
     public static void main(final String[] args) {
         LauncherImpl.launchApplication(GUIApp.class, GUIPreloader.class, args);
     }

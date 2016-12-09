@@ -29,6 +29,9 @@ import java.util.Date;
 @SchemaVersion(0.1)
 public class ConnectionLogEntry extends AbstractEntity<ConnectionLogEntry> {
 
+    /**
+     * The entity's dao
+     */
     private static final Dao<ConnectionLogEntry, Integer> dao;
 
     static {
@@ -47,6 +50,9 @@ public class ConnectionLogEntry extends AbstractEntity<ConnectionLogEntry> {
         return dao;
     }
 
+    /**
+     * The auto-incremented key
+     */
     @DatabaseField(
             canBeNull = false,
             generatedId = true,
@@ -54,6 +60,9 @@ public class ConnectionLogEntry extends AbstractEntity<ConnectionLogEntry> {
     )
     private static Integer rowID;
 
+    /**
+     * Timestamp for when this event occurred
+     */
     @DatabaseField(
             canBeNull = false,
             index = true,
@@ -61,6 +70,9 @@ public class ConnectionLogEntry extends AbstractEntity<ConnectionLogEntry> {
     )
     private static Date date;
 
+    /**
+     * Whether the link went up or down
+     */
     @DatabaseField(
             canBeNull = false,
             index = true,
@@ -68,19 +80,33 @@ public class ConnectionLogEntry extends AbstractEntity<ConnectionLogEntry> {
     )
     private State state;
 
+    /**
+     * Constructor
+     */
     public ConnectionLogEntry() {
         super();
     }
 
+    /**
+     * Constructor
+     *
+     * @param state The link state
+     */
     private ConnectionLogEntry(final State state) {
         date = new Date();
         this.state = state;
     }
 
+    /**
+     * Log a connection becoming available
+     */
     public static void logUp() {
         new ConnectionLogEntry(State.UP).save();
     }
 
+    /**
+     * Log a connection becoming unavailable
+     */
     public static void logDown() {
         new ConnectionLogEntry(State.DOWN).save();
     }

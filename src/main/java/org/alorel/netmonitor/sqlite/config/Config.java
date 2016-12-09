@@ -29,6 +29,9 @@ import java.util.Optional;
 @SchemaVersion(0.1)
 public class Config extends AbstractEntity<Config> {
 
+    /**
+     * This entity's Dao
+     */
     private static final Dao<Config, String> dao;
 
     static {
@@ -46,6 +49,9 @@ public class Config extends AbstractEntity<Config> {
         new Config(Keys.SOUND_ENABLED, true).saveIfNotExists();
     }
 
+    /**
+     * Config item key
+     */
     @DatabaseField(
             id = true,
             canBeNull = false,
@@ -53,22 +59,40 @@ public class Config extends AbstractEntity<Config> {
     )
     private String key;
 
+    /**
+     * Config item value
+     */
     @DatabaseField(
             canBeNull = false,
             columnDefinition = "VARCHAR COLLATE NOCASE"
     )
     private String value;
 
+    /**
+     * Constructor
+     */
     public Config() {
         super();
     }
 
+    /**
+     * Constructor
+     *
+     * @param key   The config item's key
+     * @param value The config item's value
+     */
     private Config(final String key, final String value) {
         super();
         this.key = key;
         this.value = value;
     }
 
+    /**
+     * Constructor
+     *
+     * @param key   The config item's key
+     * @param value The config item's value
+     */
     private Config(final String key, final boolean value) {
         this(key, value ? "1" : "0");
     }
@@ -78,14 +102,32 @@ public class Config extends AbstractEntity<Config> {
         return dao;
     }
 
+    /**
+     * Set a configuration entry
+     *
+     * @param key   Configuration item key
+     * @param value Configuration item value
+     */
     public static void set(final String key, final String value) {
         new Config(key, value).save();
     }
 
+    /**
+     * Set a configuration entry
+     *
+     * @param key   Configuration item key
+     * @param value Configuration item value
+     */
     public static void set(final String key, final boolean value) {
         new Config(key, value ? "1" : "0").save();
     }
 
+    /**
+     * Get a config item
+     *
+     * @param key Item key
+     * @return An optional for this configuration key
+     */
     private static Optional<Config> get(final String key) {
         try {
             return Optional.ofNullable(dao.queryForId(key));
@@ -94,16 +136,35 @@ public class Config extends AbstractEntity<Config> {
         }
     }
 
+    /**
+     * Get a configuration item
+     *
+     * @param key Configuration item key
+     * @return The configuration item as a string
+     */
     public static String getString(final String key) {
         final Optional<Config> o = get(key);
         return o.isPresent() ? o.get().value : null;
     }
 
+    /**
+     * Get a configuration item
+     *
+     * @param key          Configuration item key
+     * @param defaultValue The default value if the key does not exist
+     * @return The configuration item as a boolean
+     */
     public static boolean getBoolean(final String key, final boolean defaultValue) {
         final Optional<Config> o = get(key);
         return o.isPresent() ? "1".equals(o.get().value) : defaultValue;
     }
 
+    /**
+     * Get a configuration item
+     *
+     * @param key Configuration item key
+     * @return The configuration item as a boolean
+     */
     public static boolean getBoolean(final String key) {
         return getBoolean(key, false);
     }

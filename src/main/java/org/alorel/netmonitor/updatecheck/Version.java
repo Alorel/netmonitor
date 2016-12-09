@@ -60,6 +60,6 @@ public class Version implements Comparable<Version> {
 
     @Override
     public String toString() {
-        return version;
+        return getVersion();
     }
 }

@@ -13,10 +13,15 @@ import java.io.InputStream;
 import java.net.URL;
 
 /**
- * Created by Art on 09/12/2016.
+ * Checks for new application versions
+ *
+ * @author a.molcanovas@gmail.com
  */
 public class UpdateChecker {
 
+    /**
+     * The URL to check for updates
+     */
     private static final URL updateURL;
 
     static {
@@ -27,6 +32,11 @@ public class UpdateChecker {
         }
     }
 
+    /**
+     * Check whether the application has a newer version available
+     *
+     * @return An UpdateStatus showing whether a new version is available
+     */
     public static UpdateStatus hasUpdate() {
         try (final InputStream is = updateURL.openStream()) {
             final Version remoteVersion = new Version(IOUtil.read(is));

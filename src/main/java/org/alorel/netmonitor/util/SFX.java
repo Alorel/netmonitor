@@ -9,6 +9,7 @@ package org.alorel.netmonitor.util;
 import org.alorel.netmonitor.sqlite.config.Config;
 import org.alorel.netmonitor.sqlite.config.Keys;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -16,10 +17,18 @@ import javax.sound.sampled.LineEvent;
 import java.io.IOException;
 
 /**
- * Created by Art on 09/12/2016.
+ * Plays sound effects
+ *
+ * @author a.molcanovas@gmail.com
  */
+@ParametersAreNonnullByDefault
 public class SFX {
 
+    /**
+     * Plays the given sound effect if sound effects are enabled
+     *
+     * @param url Path to the sound effect
+     */
     public static void play(final String url) {
         if (Config.getBoolean(Keys.SOUND_ENABLED)) {
             try {
@@ -45,10 +54,16 @@ public class SFX {
         }
     }
 
+    /**
+     * Plays the default "connection down" sound effect
+     */
     public static void defaultDown() {
         play("/org/alorel/netmonitor/error.wav");
     }
 
+    /**
+     * Plays the default "connection up" sound effect
+     */
     public static void defaultUp() {
         play("/org/alorel/netmonitor/success.wav");
     }

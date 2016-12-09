@@ -13,5 +13,10 @@ package org.alorel.netmonitor.sqlite;
  */
 public @interface SchemaVersion {
 
+    /**
+     * The current version of the entity's schema
+     *
+     * @return The current version of the entity's schema
+     */
     double value();
 }

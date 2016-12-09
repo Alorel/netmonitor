@@ -7,9 +7,17 @@
 package org.alorel.netmonitor.sqlite.connectionlog;
 
 /**
- * Created by Art on 09/12/2016.
+ * Connection states
+ *
+ * @author a.molcanovas@gmail.com
  */
 public enum State {
+    /**
+     * A connection is available
+     */
     UP,
+    /**
+     * A connection is unavailable
+     */
     DOWN
 }

@@ -7,10 +7,23 @@
 package org.alorel.netmonitor.updatecheck;
 
 /**
- * Created by Art on 09/12/2016.
+ * Status on a new application version
+ *
+ * @author a.molcanovas@gmail.com
  */
 public enum UpdateStatus {
+    /**
+     * A new version is available
+     */
     NEW_VERSION_AVAILABLE,
+
+    /**
+     * No updates available
+     */
     NO_UPDATES,
+
+    /**
+     * An error occurred
+     */
     ERROR
 }

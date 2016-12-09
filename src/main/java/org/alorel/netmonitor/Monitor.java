@@ -18,22 +18,45 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * Created by Art on 09/12/2016.
+ * Connection state monitor
+ *
+ * @author a.molcanovas@gmail.com
  */
 public class Monitor extends Thread {
 
+    /**
+     * A boolean property showing whether a connection is available
+     */
     private final static ReadOnlyBooleanWrapper isUp = new ReadOnlyBooleanWrapper(false);
 
+    /**
+     * Pause between subsequent checks
+     */
     private final static long INTERVAL = 5000;
 
+    /**
+     * Connection timeout
+     */
     private final static int TIMEOUT = 3000;
 
+    /**
+     * Host to use for checking
+     */
     private static final String HOST = "www.google.com";
 
+    /**
+     * Date of the last connection state change
+     */
     private static volatile Date changeDate = new Date();
 
+    /**
+     * A lock
+     */
     private static final Lock lock = new ReentrantLock(true);
 
+    /**
+     * This class' singleton instance
+     */
     private static final Monitor singleton;
 
     static {
@@ -56,16 +79,27 @@ public class Monitor extends Thread {
         singleton = new Monitor();
     }
 
+    /**
+     * Constructor
+     */
     private Monitor() {
         setName("Connectivity monitor");
         setDaemon(true);
         setPriority(Thread.MIN_PRIORITY);
     }
 
+    /**
+     * Start the singleton instance
+     */
     public static void init() {
         singleton.start();
     }
 
+    /**
+     * Get the date when the last state change occurred
+     *
+     * @return {@link #changeDate}
+     */
     public static Date getChangeDate() {
         try {
             lock.lock();
@@ -75,6 +109,11 @@ public class Monitor extends Thread {
         }
     }
 
+    /**
+     * Set whether a connection is current possible
+     *
+     * @param connectionIsUp True if it is, false if it isn't
+     */
     private static void setConnectionIsUp(final boolean connectionIsUp) {
         try {
             lock.lock();
@@ -118,6 +157,11 @@ public class Monitor extends Thread {
         }
     }
 
+    /**
+     * Return the uptime property so additional event listeners can be added
+     *
+     * @return {@link #isUp} as a Read-Only property
+     */
     public static ReadOnlyBooleanProperty getUptimeProperty() {
         return isUp.getReadOnlyProperty();
     }
