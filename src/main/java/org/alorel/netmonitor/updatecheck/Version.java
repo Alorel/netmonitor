@@ -33,6 +33,19 @@ public class Version implements Comparable<Version> {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Version)) return false;
+        Version version1 = (Version) o;
+        return Objects.equals(getVersion(), version1.getVersion());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getVersion());
+    }
+
+    @Override
     public int compareTo(@Nullable final Version that) {
         if (that == null) {
             return 1;

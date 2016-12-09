@@ -11,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 /**
  * I/O utilities
@@ -28,7 +29,7 @@ public class IOUtil {
      * @throws RuntimeException as a wrapper for any IOException
      */
     public static String read(final InputStream is) {
-        try (final InputStreamReader isr = new InputStreamReader(is)) {
+        try (final InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8)) {
             return read(isr);
         } catch (final IOException e) {
             throw new RuntimeException(e);
