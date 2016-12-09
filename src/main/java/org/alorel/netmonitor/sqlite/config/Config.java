@@ -43,6 +43,7 @@ public class Config extends AbstractEntity<Config> {
 
         new Config(Keys.LOG_CONNECT_STATUS, false).saveIfNotExists();
         new Config(Keys.START_MINIMISED, false).saveIfNotExists();
+        new Config(Keys.SOUND_ENABLED, true).saveIfNotExists();
     }
 
     @DatabaseField(

@@ -8,6 +8,7 @@ package org.alorel.netmonitor;
 
 import javafx.application.Platform;
 import javafx.stage.Stage;
+import org.alorel.netmonitor.util.SFX;
 
 import javax.swing.ImageIcon;
 import java.awt.AWTException;
@@ -71,6 +72,7 @@ public class Tray {
         trayIcon.setImage(imageDown);
         trayIcon.setToolTip(MSG_DOWN);
         toast(MSG_DOWN, TrayIcon.MessageType.ERROR);
+        SFX.defaultDown();
     }
 
     public static void setUp() {
@@ -78,6 +80,7 @@ public class Tray {
         trayIcon.setImage(imageUp);
         trayIcon.setToolTip(MSG_UP);
         toast(MSG_UP, TrayIcon.MessageType.INFO);
+        SFX.defaultUp();
     }
 
     public static void toast(final String message, final TrayIcon.MessageType messageType) {

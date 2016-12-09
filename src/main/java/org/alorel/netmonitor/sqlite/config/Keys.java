@@ -13,4 +13,5 @@ public class Keys {
 
     public static final String START_MINIMISED = "start_minimised";
     public static final String LOG_CONNECT_STATUS = "log_connect";
+    public static final String SOUND_ENABLED = "sfx";
 }

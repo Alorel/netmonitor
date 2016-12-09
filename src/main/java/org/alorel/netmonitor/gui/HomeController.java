@@ -29,6 +29,9 @@ public class HomeController {
     private CheckBox cbStartMinimised;
 
     @FXML
+    private CheckBox cbSFXOn;
+
+    @FXML
     private CheckBox cbLogConnect;
 
     @FXML
@@ -62,6 +65,11 @@ public class HomeController {
     @FXML
     private void changeMinimised() {
         Config.set(Keys.START_MINIMISED, cbStartMinimised.isSelected());
+    }
+
+    @FXML
+    private void changeSFXOn() {
+        Config.set(Keys.SOUND_ENABLED, cbSFXOn.isSelected());
     }
 
     @FXML

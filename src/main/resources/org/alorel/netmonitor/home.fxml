@@ -19,6 +19,7 @@
                 <Tooltip text="Log when connections/disconnections occurred" />
             </tooltip>
         </CheckBox>
+      <CheckBox fx:id="cbSFXOn" mnemonicParsing="false" onAction="#changeSFXOn" text="Play sound on connect/disconnect" />
         <Separator prefWidth="200.0" />
         <HBox spacing="3.0">
             <children>
