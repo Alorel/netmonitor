@@ -14,5 +14,15 @@
     <version>0.2</version>
     <packaging>jar</packaging>
 
+    <properties>
+        <mainClass>org.alorel.netmonitor.awt.TrayOnlyLauncher</mainClass>
+        <jarName>lite</jarName>
+    </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.alorel.netmonitor</groupId>
+            <artifactId>common</artifactId>
+        </dependency>
+    </dependencies>
 </project>
