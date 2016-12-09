@@ -5,40 +5,32 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.alorel</groupId>
+    <groupId>org.alorel.netmonitor</groupId>
     <artifactId>netmonitor</artifactId>
-    <version>0.1</version>
+    <packaging>pom</packaging>
+    <version>0.2</version>
+    <modules>
+        <module>common</module>
+        <module>no-gui</module>
+        <module>gui</module>
+    </modules>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jarName>${project.groupId}-${project.artifactId}</jarName>
+        <jarName>${project.artifactId}</jarName>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <mainClass>org.alorel.netmonitor.gui.GUIPreloader</mainClass>
+        <mainClass>org.alorel.netmonitor.common.Dummy</mainClass>
 
         <!-- Dependency versions -->
         <version.findbugs>3.0.1</version.findbugs>
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>com.j256.ormlite</groupId>
-            <artifactId>ormlite-jdbc</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>findbugs</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
             <artifactId>jsr305</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.xerial</groupId>
-            <artifactId>sqlite-jdbc</artifactId>
         </dependency>
     </dependencies>
 
@@ -68,6 +60,13 @@
                 <groupId>org.xerial</groupId>
                 <artifactId>sqlite-jdbc</artifactId>
                 <version>3.15.1</version>
+            </dependency>
+
+            <!-- Modules -->
+            <dependency>
+                <groupId>org.alorel.netmonitor</groupId>
+                <artifactId>common</artifactId>
+                <version>${project.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

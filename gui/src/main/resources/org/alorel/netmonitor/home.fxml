@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.TextFlow?>
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" tabClosingPolicy="UNAVAILABLE"
+         xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1"
+         fx:controller="org.alorel.netmonitor.gui.HomeController">
+    <tabs>
+        <Tab text="Configuration">
+            <content>
+                <VBox minWidth="300.0" spacing="3.0">
+                    <CheckBox fx:id="cbStartMinimised" mnemonicParsing="false" onAction="#changeMinimised"
+                              text="Start Minimised">
+                        <tooltip>
+                            <Tooltip text="Start the application minimised"/>
+                        </tooltip>
+                    </CheckBox>
+                    <CheckBox fx:id="cbLogConnect" mnemonicParsing="false" onAction="#changeLog"
+                              text="Log connect/disconnect events.">
+                        <tooltip>
+                            <Tooltip
+                                    text="Log when connect/disconnect events occur. This option currently has no use."/>
+                        </tooltip>
+                    </CheckBox>
+                    <CheckBox fx:id="cbSFXOn" mnemonicParsing="false" onAction="#changeSFXOn"
+                              text="Play sound on connect/disconnect">
+                        <tooltip>
+                            <Tooltip text="Play a short notification sound when a connection state changes"/>
+                        </tooltip>
+                    </CheckBox>
+                    <Separator prefWidth="200.0"/>
+                    <HBox spacing="3.0">
+                        <children>
+                            <Label text="Connection:"/>
+                            <Label fx:id="labelMonitorStatus" text="No change since launch"/>
+                        </children>
+                    </HBox>
+                    <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                    </padding>
+                </VBox>
+            </content>
+        </Tab>
+        <Tab text="About">
+            <content>
+                <ScrollPane prefHeight="200.0">
+                    <content>
+                        <VBox prefWidth="285.0">
+                            <children>
+                                <TextFlow prefWidth="200.0" textAlignment="JUSTIFY">
+                                    <children>
+                                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Net Monitor "/>
+                                        <Text fx:id="netMonitorVersion" strokeType="OUTSIDE" strokeWidth="0.0"
+                                              text="[vesion]"/>
+                                        <Text strokeType="OUTSIDE" strokeWidth="0.0"
+                                              text=" is a small application monitoring your network connectivity, licensed under MIT. You can visit the homepage "/>
+                                        <Hyperlink onAction="#clickHomepage" text="here." underline="true"/>
+                                    </children>
+                                </TextFlow>
+                                <Separator prefWidth="200.0"/>
+                                <Label text="Open Source Attributions:" underline="true">
+                                    <font>
+                                        <Font name="System Bold" size="14.0"/>
+                                    </font>
+                                </Label>
+                                <Hyperlink onAction="#clickLabeledLink" text="https://icons8.com/"/>
+                                <Hyperlink onAction="#clickLabeledLink"
+                                           text="https://www.freesound.org/people/grunz/sounds/109662/"/>
+                                <Hyperlink onAction="#clickLabeledLink"
+                                           text="https://www.freesound.org/people/Autistic%20Lucario/sounds/142608/"/>
+                            </children>
+                            <padding>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                            </padding>
+                        </VBox>
+                    </content>
+                </ScrollPane>
+            </content>
+        </Tab>
+    </tabs>
+
+    <padding>
+        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+    </padding>
+</TabPane>
