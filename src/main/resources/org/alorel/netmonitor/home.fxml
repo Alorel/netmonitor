@@ -24,12 +24,15 @@
                             <Tooltip text="Start the application minimised" />
                         </tooltip>
                     </CheckBox>
-                    <CheckBox fx:id="cbLogConnect" mnemonicParsing="false" onAction="#changeLog" text="Log connects/disconnects">
+                    <CheckBox fx:id="cbLogConnect" mnemonicParsing="false" onAction="#changeLog" text="Log connect/disconnect events.">
                         <tooltip>
-                            <Tooltip text="Log when connections/disconnections occurred" />
+                            <Tooltip text="Log when connect/disconnect events occur. This option currently has no use." />
                         </tooltip>
                     </CheckBox>
-                    <CheckBox fx:id="cbSFXOn" mnemonicParsing="false" onAction="#changeSFXOn" text="Play sound on connect/disconnect" />
+                    <CheckBox fx:id="cbSFXOn" mnemonicParsing="false" onAction="#changeSFXOn" text="Play sound on connect/disconnect">
+                  <tooltip>
+                     <Tooltip text="Play a short notification sound when a connection state changes" />
+                  </tooltip></CheckBox>
                     <Separator prefWidth="200.0" />
                     <HBox spacing="3.0">
                         <children>
