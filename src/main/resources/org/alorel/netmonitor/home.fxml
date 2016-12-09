@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="300.0" spacing="3.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.alorel.netmonitor.gui.HomeController">
+    <children>
+        <CheckBox fx:id="cbStartMinimised" mnemonicParsing="false" onAction="#changeMinimised" text="Start Minimised">
+            <tooltip>
+                <Tooltip text="Start the application minimised" />
+            </tooltip>
+        </CheckBox>
+        <CheckBox fx:id="cbLogConnect" mnemonicParsing="false" onAction="#changeLog" text="Log connects/disconnects">
+            <tooltip>
+                <Tooltip text="Log when connections/disconnections occurred" />
+            </tooltip>
+        </CheckBox>
+        <Separator prefWidth="200.0" />
+        <HBox spacing="3.0">
+            <children>
+                <Label text="Connection:" />
+                <Label fx:id="labelMonitorStatus" text="No change since launch" />
+            </children>
+        </HBox>
+    </children>
+    <padding>
+        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+    </padding>
+</VBox>
