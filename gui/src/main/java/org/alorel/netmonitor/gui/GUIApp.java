@@ -64,9 +64,8 @@ public class GUIApp extends Application {
             }
         };
 
-        primaryStage.onShowingProperty().addListener((a, b, c) -> {
-            showHideMenu.setLabel(primaryStage.isShowing() ? "Hide" : "Show");
-        });
+        primaryStage.setOnHidden(e -> showHideMenu.setLabel("Show"));
+        primaryStage.setOnShown(e -> showHideMenu.setLabel("Hide"));
 
         showHideMenu.addActionListener(e -> Platform.runLater(showHideRunnable));
 

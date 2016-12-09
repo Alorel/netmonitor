@@ -14,7 +14,7 @@
     <packaging>jar</packaging>
 
     <properties>
-        <mainClass>org.alorel.org.alorel.netmonitor.gui.GUIPreloader</mainClass>
+        <mainClass>org.alorel.netmonitor.gui.GUIPreloader</mainClass>
         <jarName>full</jarName>
     </properties>
 
