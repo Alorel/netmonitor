@@ -1,0 +1,11 @@
+language: java
+jdk:
+  - openjdk8
+  - oraclejdk8
+
+cache:
+  directories:
+    - ~/.m2/repository
+
+matrix:
+  fast_finish: true
