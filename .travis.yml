@@ -1,6 +1,10 @@
 language: java
 
+sudo: required
+dist: trusty
+
 jdk:
+  - openjdk8
   - oraclejdk8
 
 cache:
