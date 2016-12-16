@@ -142,6 +142,7 @@ public class GUIPreloader extends Preloader {
     public void handleStateChangeNotification(final StateChangeNotification stateChangeNotification) {
         if (stateChangeNotification.getType() == StateChangeNotification.Type.BEFORE_START) {
             preloaderStage.hide();
+            preloaderStage = null;
         }
     }
 }

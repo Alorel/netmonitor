@@ -104,6 +104,7 @@ public class GUIApp extends Application {
     @Override
     public void start(final Stage primaryStage) throws Exception {
         postStageTrayInit(primaryStage);
+        Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
 
         primaryStage.setTitle("Net Monitor");
         FXUtil.setStageIcons(primaryStage);

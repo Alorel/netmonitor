@@ -8,14 +8,25 @@ package org.alorel.netmonitor.common;
 
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
+import org.alorel.netmonitor.common.collections.CyclicIterable;
 import org.alorel.netmonitor.common.sqlite.config.Config;
 import org.alorel.netmonitor.common.sqlite.config.Keys;
 import org.alorel.netmonitor.common.sqlite.connectionlog.ConnectionLogEntry;
 
-import java.net.InetAddress;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+import java.util.Properties;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Connection state monitor
@@ -28,21 +39,6 @@ public class Monitor extends Thread {
      * A boolean property showing whether a connection is available
      */
     private final static ReadOnlyBooleanWrapper isUp = new ReadOnlyBooleanWrapper(false);
-
-    /**
-     * Pause between subsequent checks
-     */
-    private final static long INTERVAL = 5000;
-
-    /**
-     * Connection timeout
-     */
-    private final static int TIMEOUT = 3000;
-
-    /**
-     * Host to use for checking
-     */
-    private static final String HOST = "www.google.com";
 
     /**
      * Date of the last connection state change
@@ -60,6 +56,7 @@ public class Monitor extends Thread {
     private static final Monitor singleton;
 
     static {
+        PeriodicGarbageCollector.getInstance().start();
         isUp.addListener((obs, oldValue, newValue) -> {
             if (newValue) {
                 Tray.setUp();
@@ -79,13 +76,19 @@ public class Monitor extends Thread {
         singleton = new Monitor();
     }
 
+    private long waitTime;
+    private int connectionTimeout;
+    private int maxFailures;
+
+    private Stream<URL> hosts;
+
     /**
      * Constructor
      */
     private Monitor() {
         setName("Connectivity monitor");
         setDaemon(true);
-        setPriority(Thread.MIN_PRIORITY);
+        setPriority(Thread.MAX_PRIORITY);
     }
 
     /**
@@ -118,43 +121,99 @@ public class Monitor extends Thread {
         try {
             lock.lock();
             changeDate = new Date();
-            isUp.set(connectionIsUp);
         } finally {
             lock.unlock();
+            isUp.set(connectionIsUp);
         }
     }
 
+    private void readConfig() throws IOException {
+        System.out.println("Reading configuration");
+
+        final Properties p = new Properties();
+        try (final InputStream is = Monitor.class.getResourceAsStream("/org/alorel/netmonitor/config.properties")) {
+            p.load(is);
+        }
+
+        waitTime = Long.parseUnsignedLong(p.getProperty("check_interval"));
+        connectionTimeout = Integer.parseUnsignedInt(p.getProperty("check_timeout"));
+        maxFailures = Integer.parseUnsignedInt(p.getProperty("successive_timeouts_to_mark_connection_down"));
+
+        System.out.println("Check interval set to " + waitTime);
+        System.out.println("Connection timeout set to " + connectionTimeout);
+        System.out.println("Successive timeout limit set to " + maxFailures);
+
+        final String[] hosts = p.getProperty("hosts").split(",");
+        final String format = "http://%s";
+
+        System.out.println("Transforming URLs");
+        final List<URL> urlList = Arrays.stream(hosts)
+                .map(h -> String.format(format, h))
+                .map(h -> {
+                    try {
+                        return new URL(h);
+                    } catch (final MalformedURLException e) {
+                        throw new RuntimeException(e.getLocalizedMessage(), e);
+                    }
+                }).collect(Collectors.toList());
+
+        System.out.println("Creating cyclic URL stream");
+        this.hosts = new CyclicIterable<>(urlList.toArray(new URL[urlList.size()])).stream();
+    }
+
+    @SuppressWarnings("InfiniteLoopStatement")
     @Override
     public void run() {
-        while (true) {
-            boolean hasBeenSet = false;
+        try {
+            readConfig();
+        } catch (final IOException e) {
+            throw new RuntimeException(e.getLocalizedMessage(), e);
+        }
 
+        final String reachableFormat = "%s contacted in %d ms%n";
+        final String unreachableFormat = "%s unreachable: %s%n";
+        final String successiveFormat = "%d successive connection attempts failed. Marking connection as down.%n";
+        final String requestMethod = "HEAD";
+        final AtomicInteger successives = new AtomicInteger(0);
+
+        hosts.forEach(host -> {
+            final long start = System.currentTimeMillis();
+            HttpURLConnection conn = null;
             try {
-                for (final InetAddress address : InetAddress.getAllByName(HOST)) {
-                    if (address.isReachable(TIMEOUT)) {
-                        setConnectionIsUp(true);
-                        hasBeenSet = true;
-                        break;
-                    } else {
-                        System.out.printf("%s could not be contacted%n", address);
+                conn = (HttpURLConnection) host.openConnection();
+                conn.setRequestMethod(requestMethod);
+                conn.setConnectTimeout(connectionTimeout);
+
+                try {
+                    conn.connect();
+                    System.out.printf(reachableFormat, host, System.currentTimeMillis() - start);
+                    setConnectionIsUp(true);
+                    successives.set(0);
+                } catch (final IOException e) {
+                    System.err.printf(unreachableFormat, host, e.getLocalizedMessage());
+                    final int successiveFailures;
+
+                    if ((successiveFailures = successives.incrementAndGet()) >= maxFailures) {
+                        setConnectionIsUp(false);
+                        System.err.printf(successiveFormat, successiveFailures);
                     }
                 }
-            } catch (final Exception e) {
+
+            } catch (final IOException e) {
                 e.printStackTrace();
-            }
-
-            if (!hasBeenSet) {
-                setConnectionIsUp(false);
-            }
-
-            try {
-                synchronized (this) {
-                    wait(INTERVAL);
+            } finally {
+                if (null != conn) {
+                    conn.disconnect();
                 }
-            } catch (final InterruptedException e) {
-                System.out.printf("Interrupted:%n%s%n", e.getLocalizedMessage());
+                try {
+                    synchronized (Monitor.this) {
+                        Monitor.this.wait(waitTime);
+                    }
+                } catch (final InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
-        }
+        });
     }
 
     /**
@@ -162,6 +221,7 @@ public class Monitor extends Thread {
      *
      * @return {@link #isUp} as a Read-Only property
      */
+
     public static ReadOnlyBooleanProperty getUptimeProperty() {
         return isUp.getReadOnlyProperty();
     }
